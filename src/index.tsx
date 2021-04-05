@@ -7,6 +7,8 @@ import { fetchPlugin } from './plungins/fetch-plugin'
 const App = () => {
   const [input, setInput] = useState('')
   const [code, setCode] = useState('')
+  const iframe = useRef<any>()
+
   const ref = useRef<any>()
 
   const onClick = async () => {
@@ -19,10 +21,17 @@ const App = () => {
         write: false,
         plugins: [unpkgPathPlugin(), fetchPlugin(input)],
         define: {
-          'process.env.NODE_ENV': 'production',
+          'process.env.NODE_ENV': '"production"',
         },
       })
-      setCode(result.outputFiles[0].text)
+      // setCode(result.outputFiles[0].text)
+
+      // eval(result.outputFiles[0].text)
+
+      iframe.current?.contentWindow?.postMessage(
+        result.outputFiles[0].text,
+        '*'
+      )
     } catch (e) {
       console.log(e)
     }
@@ -39,6 +48,25 @@ const App = () => {
     startService()
   }, [])
 
+  const html = `
+    <html>
+      <head></head>
+      <body>
+          <div id="root"></div>
+          <script>
+          window.addEventListener('message', event=>{
+              try {
+                eval(event.data)
+              }catch (err) {
+                const root = document.getElementById('root')
+                root.innerHTML = '<div style="color:red;">'+err+'</div>'
+                throw err
+              }
+          }, false)
+          </script>
+      </body>
+    </html> 
+  `
   return (
     <div>
       <textarea
@@ -51,6 +79,7 @@ const App = () => {
         <button onClick={onClick}>submit</button>
       </div>
       <pre>{code}</pre>
+      <iframe ref={iframe} srcDoc={html} sandbox="allow-scripts" />
     </div>
   )
 }
