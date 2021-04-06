@@ -47,6 +47,10 @@ const App = () => {
     startService()
   }, [])
 
+  const handleEditorChange = (value: string) => {
+    setInput(value)
+  }
+
   const html = `
     <html>
       <head></head>
@@ -68,7 +72,10 @@ const App = () => {
   `
   return (
     <div>
-      <CodeEditor />
+      <CodeEditor
+        initialValue="const a = 12;"
+        handleCodeChange={handleEditorChange}
+      />
       <textarea
         cols={150}
         rows={30}
