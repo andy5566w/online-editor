@@ -4,10 +4,11 @@ import * as esbuild from 'esbuild-wasm'
 import { unpkgPathPlugin } from './plungins/unpkg-path-plungin'
 import { fetchPlugin } from './plungins/fetch-plugin'
 import CodeEditor from './components/code-editor'
+import PreviewIframe from './components/preview'
 
 const App = () => {
   const [input, setInput] = useState('')
-  const iframe = useRef<any>()
+  const [code, setCode] = useState('')
 
   const ref = useRef<any>()
 
@@ -15,8 +16,6 @@ const App = () => {
     if (!ref.current) return
 
     try {
-      iframe.current.srcdoc = html
-
       const result = await ref.current.build({
         entryPoints: ['index.js'],
         bundle: true,
@@ -26,11 +25,7 @@ const App = () => {
           'process.env.NODE_ENV': '"production"',
         },
       })
-
-      iframe.current?.contentWindow?.postMessage(
-        result.outputFiles[0].text,
-        '*'
-      )
+      setCode(result.outputFiles[0].text)
     } catch (e) {
       console.log(e)
     }
@@ -51,41 +46,16 @@ const App = () => {
     setInput(value)
   }
 
-  const html = `
-    <html>
-      <head></head>
-      <body>
-          <div id="root"></div>
-          <script>
-          window.addEventListener('message', event=>{
-              try {
-                eval(event.data)
-              }catch (err) {
-                const root = document.getElementById('root')
-                root.innerHTML = '<div style="color:red;">'+err+'</div>'
-                throw err
-              }
-          }, false)
-          </script>
-      </body>
-    </html> 
-  `
   return (
     <div>
       <CodeEditor
         initialValue="const a = 12;"
         handleCodeChange={handleEditorChange}
       />
-      <textarea
-        cols={150}
-        rows={30}
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
       <div>
         <button onClick={onClick}>submit</button>
       </div>
-      <iframe ref={iframe} srcDoc={html} sandbox="allow-scripts" />
+      <PreviewIframe code={code} />
     </div>
   )
 }
