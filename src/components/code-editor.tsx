@@ -2,6 +2,8 @@ import MonacoEditor, { EditorDidMount } from '@monaco-editor/react'
 import prettier from 'prettier'
 import parser from 'prettier/parser-babel'
 import { useRef } from 'react'
+import 'bulmaswatch/superhero/bulmaswatch.min.css'
+import './syntax.css'
 
 interface CodeEditorProps {
   initialValue: string
@@ -23,20 +25,27 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   const onFormatClick = () => {
     const unformatCode: string = editorRef.current?.getModel()?.getValue() || ''
 
-    const formatedCode: string = prettier.format(unformatCode, {
-      parser: 'babel',
-      plugins: [parser],
-      useTabs: false,
-      semi: false,
-      singleQuote: true,
-    })
+    const formatedCode: string = prettier
+      .format(unformatCode, {
+        parser: 'babel',
+        plugins: [parser],
+        useTabs: false,
+        semi: false,
+        singleQuote: true,
+      })
+      .replace(/\n$/, '')
 
     editorRef.current?.setValue(formatedCode)
   }
 
   return (
     <div>
-      <button onClick={onFormatClick}>Format</button>
+      <button
+        className="button button-format is-primary is-small"
+        onClick={onFormatClick}
+      >
+        Format
+      </button>
       <MonacoEditor
         editorDidMount={mountedMonaco}
         value={initialValue}
