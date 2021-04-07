@@ -26,7 +26,7 @@ const PreviewIframe: React.FC<PreviewIframeProps> = ({ code }) => {
   const iframe = useRef<any>()
 
   useEffect(() => {
-    if (iframe.current) iframe.current.srcdoc = html
+    // if (iframe.current) iframe.current.srcdoc = html -> 有問題
     iframe.current?.contentWindow?.postMessage(code, '*')
   }, [code])
 
