@@ -30,7 +30,7 @@ ReactDOM.render(<App />, document.getElementById('root'))
   }
 
   return (
-    <>
+    <div>
       <CodeEditor
         initialValue={initialCode}
         handleCodeChange={handleEditorChange}
@@ -39,7 +39,7 @@ ReactDOM.render(<App />, document.getElementById('root'))
         <button onClick={onClick}>submit</button>
       </div>
       <PreviewIframe code={code} />
-    </>
+    </div>
   )
 }
 export default CodeCell
