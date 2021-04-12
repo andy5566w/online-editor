@@ -4,4 +4,4 @@ export interface Cell {
   content: string
 }
 
-export type CellTypes = 'cell' | 'text'
+export type CellTypes = 'code' | 'text'
