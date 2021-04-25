@@ -1,6 +1,6 @@
 import CodeEditor from './CodeEditor'
 import PreviewIframe from './preview'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import bundler from '../bundler'
 
 const CodeCell: React.FC = () => {
@@ -16,6 +16,22 @@ ReactDOM.render(<App />, document.getElementById('root'))
   const [input, setInput] = useState('')
   const [code, setCode] = useState(() => initialCode)
 
+  useEffect(() => {
+    let timer: any
+    try {
+      timer = setTimeout(() => {
+        handleBundle(input)
+      }, 500)
+    } catch (e) {
+      console.log(e)
+    }
+    async function handleBundle(input: string) {
+      const result = await bundler(input)
+      setCode(result)
+    }
+
+    return () => clearTimeout(timer)
+  }, [input])
   const onClick = async () => {
     try {
       const result = await bundler(input)
