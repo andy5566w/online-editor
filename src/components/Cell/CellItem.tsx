@@ -1,5 +1,5 @@
 import { Cell } from '../../state/cell'
-import CodeCell from '../CodeCell'
+import CodeCell from './code/CodeCell'
 
 interface CellItemProps {
   cell: Cell
@@ -7,9 +7,9 @@ interface CellItemProps {
 const CellItem: React.FC<CellItemProps> = ({ cell }) => {
   let child: JSX.Element
   if (cell.type === 'code') {
-    child = <CodeCell />
+    child = <CodeCell cell={cell} />
   } else {
-    child = <CodeCell />
+    child = <CodeCell cell={cell} />
   }
   return <div>{child}</div>
 }

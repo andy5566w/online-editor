@@ -2,7 +2,15 @@ import { ActionType } from '../action-types'
 import { CellActions } from '../actions'
 import { Cell } from '../cell'
 import produce from 'immer'
+const initialCode = `import React from 'react';
+import ReactDOM from 'react-dom'
 
+const App = () => {
+  return <div>Hi There~</div>
+}
+
+ReactDOM.render(<App />, document.getElementById('root'))
+`
 interface CellsState {
   loading: boolean
   error: string | null
@@ -37,7 +45,7 @@ const reducer = produce(
         return state
       case ActionType.INSERT_CELL_BEFORE:
         const cell: Cell = {
-          content: '',
+          content: initialCode,
           type: action.payload.type,
           id: randomId(),
         }

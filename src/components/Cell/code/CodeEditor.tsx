@@ -3,7 +3,7 @@ import prettier from 'prettier'
 import parser from 'prettier/parser-babel'
 import { useRef } from 'react'
 import 'bulmaswatch/superhero/bulmaswatch.min.css'
-import './syntax.css'
+import '../../syntax.css'
 
 interface CodeEditorProps {
   initialValue: string
@@ -25,7 +25,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   const onFormatClick = () => {
     const unformatCode: string = editorRef.current?.getModel()?.getValue() || ''
 
-    const formatedCode: string = prettier
+    const formattedCode: string = prettier
       .format(unformatCode, {
         parser: 'babel',
         plugins: [parser],
@@ -35,7 +35,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       })
       .replace(/\n$/, '')
 
-    editorRef.current?.setValue(formatedCode)
+    editorRef.current?.setValue(formattedCode)
   }
 
   return (
